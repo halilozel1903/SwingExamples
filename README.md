@@ -1,6 +1,6 @@
 # SwingExamples
 
-Modernize edilmiş ve eğitim odaklı **Java Swing** örnekleri koleksiyonu.
+Modernleştirilmiş ve eğitim odaklı **Java Swing** örnekleri koleksiyonu.
 
 Bu repo, temel olay dinleme örneklerinin yanında güncel masaüstü arayüz ihtiyaçlarına yönelik yeni demolar da içerir.
 
