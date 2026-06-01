@@ -60,7 +60,7 @@ public class TableSearchDemo extends JFrame {
 
             private void filter() {
                 String text = searchField.getText().trim();
-                sorter.setRowFilter(text.isEmpty() ? null : RowFilter.regexFilter("(?i)" + java.util.regex.Pattern.quote(text)));
+                sorter.setRowFilter(buildFilter(text));
             }
         });
 
@@ -81,5 +81,12 @@ public class TableSearchDemo extends JFrame {
         } catch (Exception ignored) {
             // Keep default look and feel
         }
+    }
+
+    private static RowFilter<DefaultTableModel, Integer> buildFilter(String searchText) {
+        if (searchText == null || searchText.isEmpty()) {
+            return null;
+        }
+        return RowFilter.regexFilter("(?i)" + java.util.regex.Pattern.quote(searchText));
     }
 }

@@ -3,6 +3,7 @@ package EventHandlingSwing;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.net.IDN;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,8 +16,10 @@ import javax.swing.UIManager;
 
 public class FormValidationDemo extends JFrame {
 
-    private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[\\w.%+-]+@[\\w.-]+\\.[A-Za-z]{2,}$");
+    private static final Pattern LOCAL_PART_PATTERN =
+            Pattern.compile("^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+$");
+    private static final Pattern DOMAIN_PATTERN =
+            Pattern.compile("^[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
     public FormValidationDemo() {
         super("Form Validation Demo");
@@ -65,7 +68,7 @@ public class FormValidationDemo extends JFrame {
                 return;
             }
 
-            if (!EMAIL_PATTERN.matcher(email).matches()) {
+            if (!isValidEmail(email)) {
                 JOptionPane.showMessageDialog(this, "Geçerli bir e-posta girin.");
                 return;
             }
@@ -88,6 +91,27 @@ public class FormValidationDemo extends JFrame {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {
             // Keep default look and feel
+        }
+    }
+
+    private static boolean isValidEmail(String email) {
+        int atIndex = email.lastIndexOf('@');
+        if (atIndex <= 0 || atIndex == email.length() - 1) {
+            return false;
+        }
+
+        String localPart = email.substring(0, atIndex);
+        String domain = email.substring(atIndex + 1);
+
+        if (!LOCAL_PART_PATTERN.matcher(localPart).matches()) {
+            return false;
+        }
+
+        try {
+            String asciiDomain = IDN.toASCII(domain);
+            return DOMAIN_PATTERN.matcher(asciiDomain).matches();
+        } catch (IllegalArgumentException ex) {
+            return false;
         }
     }
 }
